@@ -1,66 +1,56 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+
 void main() {
-  runApp( MyApp());
+  runApp( const TweenAnimationBuilderExampleApp());
 }
-class MyApp extends StatelessWidget {
+class TweenAnimationBuilderExampleApp extends StatelessWidget {
+  const TweenAnimationBuilderExampleApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      home: Scaffold(
+        appBar: AppBar(title: const Text('TweenAnimationBuilder')),
+        body: const Center(
+          child: TweenAnimationBuilderExample(),
+        ),
       ),
-      home: MyHomePage(),
     );
   }
 }
 
 
-class MyHomePage extends StatefulWidget {
+class TweenAnimationBuilderExample extends StatefulWidget {
+  const TweenAnimationBuilderExample({super.key});
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<TweenAnimationBuilderExample> createState() =>
+      _TweenAnimationBuilderExampleState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(seconds: 2),
-      vsync: this,
-    )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 10, end: 60).animate(_controller);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+class _TweenAnimationBuilderExampleState
+    extends State<TweenAnimationBuilderExample> {
+  double targetValue = 30.0;
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      child: Container(
-        width: 200.0,
-        height: 200.0,
-        color: Colors.deepPurple,
-        child: const Center(
-          child: Text('hello!',style: TextStyle(color: Colors.orange),),
-        ),
-      ),
-      builder: (BuildContext context, Widget? child) {
-        return Transform.rotate(
-          angle: _controller.value * 2.0 * math.pi,
-          child: child,
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 0, end: targetValue),
+      duration: const Duration(seconds: 1),
+      builder: (BuildContext context, double size, Widget? child) {
+        return IconButton(
+          iconSize: size,
+          color: Colors.blue,
+          icon: child!,
+          onPressed: () {
+            setState(() {
+              targetValue = targetValue == 30.0 ? 78.0 : 30.0;
+            });
+          },
         );
       },
+      child: const Icon(Icons.aspect_ratio),
     );
   }
 }
+
